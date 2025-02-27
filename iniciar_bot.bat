@@ -1,5 +1,5 @@
 @echo off
-cd /d "C:\Users\benji\Desktop\cpp\DISCORD BOT\BOT_discord"
+cd /d "CARPETA_RAIZ_DE_TU_PROYECTO"
 call venv\Scripts\activate
 python bot_discord.py
 pause
