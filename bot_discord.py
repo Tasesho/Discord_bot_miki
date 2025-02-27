@@ -143,6 +143,3 @@ if TOKEN:
     bot.run(TOKEN)
 else:
     print("❌ Error: No se encontró el token en el archivo .env")
-
-
-#C:\Users\benji\Desktop\cpp\DISCORD BOT\BOT_discord    bot_discord.py
