@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from collections import Counter
 import re
+import requests
 import os
 import random
 from dotenv import load_dotenv  # Importar dotenv
@@ -23,7 +24,6 @@ saludos=[
     "¡Ey! ¿Qué andas haciendo?",
     "¡Hey! Me alegra verte por aquí.",
 ]
-
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
@@ -121,7 +121,25 @@ async def historial(ctx):
     
     await ctx.send(resultado)
 
+@bot.command()
+async def clima(ctx,*,ciudad:str):
+    """Muestra el clima/tiempo de una zona especifica"""     #se usa como: !clima santiago chile --> 32 grados 20%humedad
+    api_key= os.getenv("WEATHER_API_KEY")     #guarda la API key en un archivo .env para evitar comprometer la key del bot
+    url = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={ciudad}&lang=es"
 
+    respuesta = requests.get(url)
+
+    if respuesta.status_code== 200:
+        datos=respuesta.json()
+        temp = datos["current"]["temp_c"]
+        humedad = datos["current"]["humidity"]
+        condicion = datos["current"]["condition"]["text"]
+
+        mensaje = f"🌍 **Ciudad:** {ciudad.title()}\n🌡️ **Temperatura:** {temp}°C\n💧 **Humedad:** {humedad}%\n☁️ **Condición:** {condicion}"
+    else:
+        mensaje = "❌ No se encontró la ciudad. Intenta con otro nombre."
+
+    await ctx.send(mensaje)
 @bot.command()
 async def ayuda(ctx):
     """Muestra los comandos disponibles del bot"""
