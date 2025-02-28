@@ -160,13 +160,13 @@ async def gif(ctx, *, query:str):
 
 
         if data['data']:                #si encuentra algun gif envia el primero que encuentra
-            gif_url = data['data'][0]['url']
-
-
+            gif_url = data['data'][0]['images']['original']['url']
+            
+            
             embed = discord.Embed(
                 title= f"GIF para: {query.title()}",
                 description=f"TOma GIF 👊👊!! '{query.title()}'",
-                color=discord.color.red()
+                color=discord.Color.red()
             )
             embed.set_image(url=gif_url)
             await ctx.send(embed=embed)
