@@ -34,7 +34,10 @@ async def triggers(message):
         "xao": "Hasta la Proxima   (˶˃ ᵕ ˂˶) .ᐟ.ᐟ ",
         "miki": "que paso?  ( °ヮ° ) ? ",
         "persona": "Persona referencia?? ",
-        "vc": "Unete al vc ╰┈➤🔊-vc-➤"
+        "vc": "Unete al vc ╰┈➤🔊-vc-➤",
+        "lit":"literalmente bruh...",
+        "xd":"porque el desagrado? (╥﹏╥)",
+        "freaky":"𝓯𝓻𝓮𝓪𝓴𝔂",
     }
     
     mensaje_usuario = message.content.lower()
@@ -122,10 +125,10 @@ async def historial(ctx):
     await ctx.send(resultado)
 
 @bot.command()
-async def clima(ctx,*,ciudad:str):
+async def clima(ctx, ciudad, pais):
     """Muestra el clima/tiempo de una zona especifica"""     #se usa como: !clima santiago chile --> 32 grados 20%humedad
     api_key= os.getenv("WEATHER_API_KEY")     #guarda la API key en un archivo .env para evitar comprometer la key del bot
-    url = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={ciudad}&lang=es"
+    url = f'http://api.weatherapi.com/v1/current.json?key={api_key}&q={ciudad},{pais}'
 
     respuesta = requests.get(url)
 
@@ -140,11 +143,45 @@ async def clima(ctx,*,ciudad:str):
         mensaje = "❌ No se encontró la ciudad. Intenta con otro nombre."
 
     await ctx.send(mensaje)
+
+
+@bot.command()
+async def gif(ctx, *, query:str):
+    """Busca un gif usando la api de giphy"""
+
+    api_key=os.getenv("GIPHY_API_KEY")     #obtiene la API key desde .env
+
+    url= f"https://api.giphy.com/v1/gifs/search?api_key={api_key}&q={query}&limit=1&lang=es"   
+
+    response= requests.get(url)
+
+    if response.status_code ==200:
+        data = response.json()
+
+
+        if data['data']:                #si encuentra algun gif envia el primero que encuentra
+            gif_url = data['data'][0]['url']
+
+
+            embed = discord.Embed(
+                title= f"GIF para: {query.title()}",
+                description=f"TOma GIF 👊👊!! '{query.title()}'",
+                color=discord.color.red()
+            )
+            embed.set_image(url=gif_url)
+            await ctx.send(embed=embed)
+        else:
+            await ctx.send("No se encontraron GIFs para esa búsqueda.")     
+    else:
+        await ctx.send( "Hubo un problema con la búsqueda del GIF. Intenta nuevamente.")
+
 @bot.command()
 async def ayuda(ctx):
     """Muestra los comandos disponibles del bot"""
     respuesta = """```
 Comandos disponibles:
+- !gif        - Responde con un gif relacionado (Ex: !gif <anime>  busca gif anime)
+- !clima      - Busca clima para la region  (!clima <Ciudad><Pais>)
 - !historial  - Muestra las 10 palabras más repetidas en los últimos 100 mensajes.
 - !say        - Repite el mensaje de un usuario.
 - !gravity    - graveda' .
