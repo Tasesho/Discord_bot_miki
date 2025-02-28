@@ -194,6 +194,7 @@ También cuento con una variedad de triggers, ¡así que habla para descubrirlos
 
 # Ejecutar el bot
 print("Token leído:", TOKEN)  # Agrega esto temporalmente
+print("Bot versión 1.1.0")
 if TOKEN:
     bot.run(TOKEN)
 else:
